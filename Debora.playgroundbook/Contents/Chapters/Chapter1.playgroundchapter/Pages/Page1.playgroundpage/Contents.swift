@@ -1,6 +1,12 @@
-//: ### Testando títulos
+//: ### Important things
 
-//: título 1
+/*:
+ We can write simple text using in `Contents.swift`. To use monospaced fonts we use this (`). To make a list
+ * `CGColor`: `markColor` and `backgroundColor`
+ * `Bool`: `isChecked`
+ * `CGFloat`: `strokeFactor`, `insetFactor`, and `markInsetFactor`
+ */
+
 
 //#-hidden-code
 import PlaygroundSupport
@@ -15,20 +21,21 @@ func say(_ message: String) {
         proxy.send(.string(message))
     }
 }
-
 //#-end-hidden-code
 
 //#-code-completion(everything, show, moveForward(), turnLeft(), collectGem(), toggleSwitch())
 
-
-
-/*---- placeholder text ----*/
-for i in 1 ... /*#-editable-code digite numero aqui*//*#-end-editable-code*/ {
+//: Enter a value for the number of repetitions of the `for`
+for i in 1 ... /*#-editable-code*/<#T##number of repetitions##Int#>/*#-end-editable-code*/ {
     say(/*#-editable-code*/<#T##something##String#>/*#-end-editable-code*/)
 }
 
-//#-editable-code
+//#-editable-code Tap to write your code
+//#-end-editable-code
 
+//#-editable-code
+// code outdented beyond delimiter
+print("This does not render correctly")
 //#-end-editable-code
 
 

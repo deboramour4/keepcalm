@@ -5,13 +5,13 @@ import UIKit
 class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
     override func loadView() {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = .black
         
         
         let label = UILabel()
         label.frame = CGRect(x: 150, y: 200, width: 200, height: 20)
         label.text = "Hello World!"
-        label.textColor = .black
+        label.textColor = .white
         
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 150, y: 50, width:100, height:100)
@@ -27,9 +27,9 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
     public func receive(_ message: PlaygroundValue) {
         if case let .string(text) = message {
             let label = UILabel()
-            label.frame = CGRect(x: 150, y: 200, width: 200, height: 20)
+            label.frame = CGRect(x: 200, y: 400, width: 200, height: 20)
             label.text = text
-            label.textColor = .black
+            label.textColor = .white
             self.view.addSubview(label)
         }
     }
