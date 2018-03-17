@@ -5,10 +5,12 @@
 	<key>Version</key>
 	<string>1.0</string>
 	<key>Name</key>
-	<string>Example Page</string>
+	<string>Intro</string>
 	<key>LiveViewMode</key>
 	<string>VisibleByDefault</string>
 	<key>PosterReference</key>
-	<string>placeholder.png</string>
+	<string>dog.jpg</string>
+	<key>LiveViewEdgeToEdge</key>
+	<string>YES</string>
 </dict>
 </plist>
