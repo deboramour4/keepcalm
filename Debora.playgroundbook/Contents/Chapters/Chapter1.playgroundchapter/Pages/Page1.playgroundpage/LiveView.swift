@@ -3,43 +3,118 @@ import UIKit
 
 
 class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
-    @IBOutlet var drawMandalaView : DrawMandalaView //MAKE REFERENCE TO A BUTTON
+    let step: Float = 1
+    var slicesLabel = UILabel()
+    var lineWidthLabel = UILabel()
+    var drawMandalaView : DrawMandalaView?
+    var toolView = UIView()
 
     override func loadView() {
         let view = UIView()
-        view.backgroundColor = .black
         
-        let label = UILabel()
-        label.frame = CGRect(x: 150, y: 200, width: 200, height: 20)
-        label.text = "Hello World!"
-        label.textColor = .white
+        //Draw Mandala Area
+        drawMandalaView = DrawMandalaView(frame: CGRect(x: 50, y: 75, width: 400, height: 400))
+        drawMandalaView?.backgroundColor = .white
+        view.addSubview(drawMandalaView!)
         
-        let button = UIButton(type: .system)
-        button.frame = CGRect(x: 150, y: 50, width:100, height:100)
-        button.setTitle("Botão", for: .normal)
+        //Tools Area
+        toolView = UIView(frame: CGRect(x: 90, y: 500, width: 325, height: 175))
+        //toolView.backgroundColor = .gray
+        view.addSubview(toolView)
         
-        let drawMandalaArea = DrawMandalaView()
-        //insert subview in view x? y? CGRect?
+        //Label Slice Slider ----------------------------
+        let slicesSliderLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        slicesSliderLabel.center = CGPoint(x: 25, y: 25)
+        slicesSliderLabel.textColor = UIColor.black
+        slicesSliderLabel.text = "Slices: "
+        toolView.addSubview(slicesSliderLabel)
 
-        view.addSubview(label)
-        view.addSubview(button)
-        view.addSubview(drawMandalaArea)
+        //Slice slider
+        let slicesSlider = UISlider(frame:CGRect(x: 50, y: 0, width: 250, height: 50))
+        slicesSlider.minimumValue = 4
+        slicesSlider.maximumValue = 20
+        slicesSlider.value = 12.0
+        slicesSlider.isContinuous = true
+        slicesSlider.tintColor = UIColor.green
+        slicesSlider.addTarget(self, action: #selector(slicesSliderValueDidChange(_:)), for: .valueChanged)
+        toolView.addSubview(slicesSlider)
+        
+        //Label Slice Number
+        slicesLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        slicesLabel.center = CGPoint(x: 325, y: 25)
+        slicesLabel.textColor = UIColor.black
+        slicesLabel.text = drawMandalaView?.getSlices()
+        toolView.addSubview(slicesLabel)
+        
+        //Label lineWidth Slider ----------------------------
+        let lineWidthSliderLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        lineWidthSliderLabel.center = CGPoint(x: 25, y: 75)
+        lineWidthSliderLabel.textColor = UIColor.black
+        lineWidthSliderLabel.text = "Line: "
+        toolView.addSubview(lineWidthSliderLabel)
+
+        //lineWidth slider
+        let lineWidthSlider = UISlider(frame:CGRect(x: 50, y: 50, width: 250, height: 50))
+        lineWidthSlider.minimumValue = 1
+        lineWidthSlider.maximumValue = 15
+        lineWidthSlider.value = 3.0
+        lineWidthSlider.isContinuous = true
+        lineWidthSlider.tintColor = UIColor.green
+        lineWidthSlider.addTarget(self, action: #selector(lineWidthSliderValueDidChange(_:)), for: .valueChanged)
+        toolView.addSubview(lineWidthSlider)
+        
+        //Label lineWidth Number
+        lineWidthLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        lineWidthLabel.center = CGPoint(x: 325, y: 75)
+        lineWidthLabel.textColor = UIColor.black
+        lineWidthLabel.text = drawMandalaView?.getLineWidth()
+        toolView.addSubview(lineWidthLabel)
+        
+        //Clear button
+        let clearBtn = UIButton(type: .system)
+        clearBtn.frame = CGRect(x: 120, y: 150, width:150, height:20)
+        clearBtn.setTitle("Clear", for: .normal)
+        clearBtn.addTarget(self, action: #selector(clearDraw), for: .touchUpInside)
+        toolView.addSubview(clearBtn)
+        
         self.view = view
     }
 
-    @IBAction func clearDraw(){
-        drawMandalaView.lines = []
-        drawMandalaView.setNeedsDisplay()
+    func slicesSliderValueDidChange(_ sender:UISlider!) {
+        drawMandalaView?.changeSlicesTo(Int(sender.value))
+        slicesLabel.text = drawMandalaView?.getSlices()
+        drawMandalaView?.setNeedsDisplay()
+    }
+    
+    func lineWidthSliderValueDidChange(_ sender:UISlider!) {
+        drawMandalaView?.changeLineWidthTo(Int(sender.value))
+        lineWidthLabel.text = drawMandalaView?.getLineWidth()
+        drawMandalaView?.setNeedsDisplay()
+    }
+    
+    @objc func clearDraw(){
+        drawMandalaView?.clear()
+        drawMandalaView?.setNeedsDisplay()
     }
 
-    @IBAction func changeStrokeColor(button: UIButton!){
-        var color = UIColor!
-        if (button.titleLabel.text == "Red"){
-            color = UIColor.redColor()
-        } else if (button.titleLabel.text == "Black") {
-            color = UIColor.blackColor()
+//    @IBAction func changeStrokeColor(button: UIButton!){
+//        var color = UIColor!
+//        if (button.titleLabel.text == "Red"){
+//            color = UIColor.redColor()
+//        } else if (button.titleLabel.text == "Black") {
+//            color = UIColor.blackColor()
+//        }
+//        drawMandalaView.drawColor = color
+//    }
+    
+    public override func viewDidLayoutSubviews(){
+        if self.view.frame.height < self.view.frame.width {
+            drawMandalaView?.frame = CGRect(x: 20, y: 75, width: 400, height: 400)
+            toolView.frame = CGRect( x:430, y:200, width:toolView.frame.size.width, height:toolView.frame.size.height )
+        } else {
+            drawMandalaView?.frame = CGRect(x: 50, y: 75, width: 400, height: 400)
+            toolView.frame = CGRect( x:90, y:500, width:toolView.frame.size.width, height:toolView.frame.size.height )
         }
-        drawMandalaView.drawColor = color
     }
     
     //Receive messages from Contents.swift
