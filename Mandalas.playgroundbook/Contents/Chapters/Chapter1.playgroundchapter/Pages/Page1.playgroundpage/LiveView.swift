@@ -30,28 +30,28 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         //Button pencil
         let pen = UIButton(type: .system)
         pen.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-        pen.setBackgroundImage(UIImage(named: "draw.jpg"), for: .normal)
+        pen.setBackgroundImage(UIImage(named: "icons/draw.png"), for: .normal)
         //pen.addTarget(self, action: #selector(toolPen), for: UIControlEvents.touchDown)
         toolView.addSubview(pen)
         
         //Button paint
         let paint = UIButton(type: .system)
         paint.frame = CGRect(x: 90, y: 0, width: 50, height: 45)
-        paint.setBackgroundImage(UIImage(named: "paint.jpg"), for: .normal)
+        paint.setBackgroundImage(UIImage(named: "icons/paint.png"), for: .normal)
         //paint.addTarget(self, action: #selector(toolPen), for: UIControlEvents.touchDown)
         toolView.addSubview(paint)
         
         //Button clear
         let clear = UIButton(type: .system)
         clear.frame = CGRect(x: 180, y: 0, width: 50, height: 45)
-        clear.setBackgroundImage(UIImage(named: "clear.jpg"), for: .normal)
+        clear.setBackgroundImage(UIImage(named: "icons/clear.png"), for: .normal)
         clear.addTarget(self, action: #selector(clearDraw), for: .touchUpInside)
         toolView.addSubview(clear)
         
         //Button save
         let save = UIButton(type: .system)
         save.frame = CGRect(x: 270, y: 0, width: 50, height: 50)
-        save.setBackgroundImage(UIImage(named: "save.jpg"), for: .normal)
+        save.setBackgroundImage(UIImage(named: "icons/save.png"), for: .normal)
         save.addTarget(self, action: #selector(saveMandala), for: .touchUpInside)
         toolView.addSubview(save)
         
