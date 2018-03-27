@@ -9,6 +9,11 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
     var drawMandalaView : DrawMandalaView?
     var toolView = UIView()
     var bgImg = UIImageView()
+    
+    let pen = UIButton(type: .custom)
+    let paint = UIButton(type: .custom)
+    let clear = UIButton(type: .custom)
+    let save = UIButton(type: .custom)
 
     override func loadView() {
         let view = UIView()
@@ -27,31 +32,33 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         //toolView.backgroundColor = .gray
         view.addSubview(toolView)
         
+        
         //Button pencil
-        let pen = UIButton(type: .system)
-        pen.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        pen.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         pen.setBackgroundImage(UIImage(named: "icons/draw.png"), for: .normal)
-        //pen.addTarget(self, action: #selector(toolPen), for: UIControlEvents.touchDown)
+        pen.setImage(UIImage(named: "icons/draw_black.png"), for: .selected)
+        pen.isSelected = true
+        pen.addTarget(self, action: #selector(penDraw), for: UIControlEvents.touchDown)
         toolView.addSubview(pen)
         
         //Button paint
-        let paint = UIButton(type: .system)
-        paint.frame = CGRect(x: 90, y: 0, width: 50, height: 45)
-        paint.setBackgroundImage(UIImage(named: "icons/paint.png"), for: .normal)
-        //paint.addTarget(self, action: #selector(toolPen), for: UIControlEvents.touchDown)
+        paint.frame = CGRect(x: 90, y: 0, width: 40, height: 40)
+        paint.setImage(UIImage(named: "icons/paint.png"), for: .normal)
+        paint.setImage(UIImage(named: "icons/paint_black.png"), for: .selected)
+        paint.addTarget(self, action: #selector(paintDraw), for: UIControlEvents.touchDown)
         toolView.addSubview(paint)
         
         //Button clear
-        let clear = UIButton(type: .system)
-        clear.frame = CGRect(x: 180, y: 0, width: 50, height: 45)
-        clear.setBackgroundImage(UIImage(named: "icons/clear.png"), for: .normal)
+        clear.frame = CGRect(x: 180, y: 0, width: 50, height: 50)
+        clear.setImage(UIImage(named: "icons/clear.png"), for: .normal)
+        clear.setImage(UIImage(named: "icons/clear_black.png"), for: .selected)
         clear.addTarget(self, action: #selector(clearDraw), for: .touchUpInside)
         toolView.addSubview(clear)
         
         //Button save
-        let save = UIButton(type: .system)
-        save.frame = CGRect(x: 270, y: 0, width: 50, height: 50)
-        save.setBackgroundImage(UIImage(named: "icons/save.png"), for: .normal)
+        save.frame = CGRect(x: 270, y: 0, width: 40, height: 40)
+        save.setImage(UIImage(named: "icons/save.png"), for: .normal)
+        save.setImage(UIImage(named: "icons/save_black.png"), for: .selected)
         save.addTarget(self, action: #selector(saveMandala), for: .touchUpInside)
         toolView.addSubview(save)
         
@@ -118,7 +125,25 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         drawMandalaView?.setNeedsDisplay()
     }
     
+    @objc func paintDraw(){
+        clear.isSelected = false
+        save.isSelected = false
+        pen.isSelected = false
+        paint.isSelected = true
+    }
+    
+    @objc func penDraw(){
+        clear.isSelected = false
+        save.isSelected = false
+        pen.isSelected = true
+        paint.isSelected = false
+    }
+    
     @objc func clearDraw(){
+        clear.isSelected = true
+        save.isSelected = false
+        pen.isSelected = false
+        paint.isSelected = false
         let alertClear = UIAlertController(title: "Clear Mandala", message: "Do you really want to clear your drawing?", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ok", style: .default, handler:
         { (action) -> Void in
@@ -129,8 +154,14 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         alertClear.addAction(okAction)
         alertClear.addAction(cancelAction)
         self.present(alertClear, animated: true, completion: nil)
+        clear.isSelected = false
+        pen.isSelected = true
     }
     @objc  func saveMandala() {
+        clear.isSelected = false
+        save.isSelected = true
+        pen.isSelected = false
+        paint.isSelected = false
         let imageMandala = drawMandalaView?.getImage()
         let imageData = UIImagePNGRepresentation(imageMandala!)
         let compresedImage = UIImage(data: imageData!)
@@ -140,6 +171,9 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
         alert.addAction(okAction)
         self.present(alert, animated: true, completion: nil)
+        
+        save.isSelected = false
+        pen.isSelected = true
     }
     
     public override func viewDidLayoutSubviews(){
