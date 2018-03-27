@@ -9,14 +9,14 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
     var drawMandalaView : DrawMandalaView?
     var toolView = UIView()
     var bgImg = UIImageView()
-    
+
     override func loadView() {
         let view = UIView()
         // Background
         bgImg.frame = CGRect(x: 0, y: 0, width: 1100, height: 900)
         bgImg.image = UIImage(named: "bg_landscape.png")
         view.addSubview(bgImg)
-        
+
         //Draw Mandala Area
         drawMandalaView = DrawMandalaView(frame: CGRect(x: 50, y: 75, width: 400, height: 400))
         drawMandalaView?.backgroundColor = .white
@@ -27,15 +27,43 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         //toolView.backgroundColor = .gray
         view.addSubview(toolView)
         
+        //Button pencil
+        let pen = UIButton(type: .system)
+        pen.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        pen.setBackgroundImage(UIImage(named: "icons/draw.png"), for: .normal)
+        //pen.addTarget(self, action: #selector(toolPen), for: UIControlEvents.touchDown)
+        toolView.addSubview(pen)
+        
+        //Button paint
+        let paint = UIButton(type: .system)
+        paint.frame = CGRect(x: 90, y: 0, width: 50, height: 45)
+        paint.setBackgroundImage(UIImage(named: "icons/paint.png"), for: .normal)
+        //paint.addTarget(self, action: #selector(toolPen), for: UIControlEvents.touchDown)
+        toolView.addSubview(paint)
+        
+        //Button clear
+        let clear = UIButton(type: .system)
+        clear.frame = CGRect(x: 180, y: 0, width: 50, height: 45)
+        clear.setBackgroundImage(UIImage(named: "icons/clear.png"), for: .normal)
+        clear.addTarget(self, action: #selector(clearDraw), for: .touchUpInside)
+        toolView.addSubview(clear)
+        
+        //Button save
+        let save = UIButton(type: .system)
+        save.frame = CGRect(x: 270, y: 0, width: 50, height: 50)
+        save.setBackgroundImage(UIImage(named: "icons/save.png"), for: .normal)
+        save.addTarget(self, action: #selector(saveMandala), for: .touchUpInside)
+        toolView.addSubview(save)
+        
         //Label Slice Slider ----------------------------
         let slicesSliderLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-        slicesSliderLabel.center = CGPoint(x: 25, y: 25)
+        slicesSliderLabel.center = CGPoint(x: 25, y: 75)
         slicesSliderLabel.textColor = UIColor.black
         slicesSliderLabel.text = "Slices: "
         toolView.addSubview(slicesSliderLabel)
-        
+
         //Slice slider
-        let slicesSlider = UISlider(frame:CGRect(x: 50, y: 0, width: 250, height: 50))
+        let slicesSlider = UISlider(frame:CGRect(x: 50, y: 50, width: 250, height: 50))
         slicesSlider.minimumValue = 2
         slicesSlider.maximumValue = 20
         slicesSlider.value = 12.0
@@ -46,20 +74,20 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         
         //Label Slice Number
         slicesLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-        slicesLabel.center = CGPoint(x: 325, y: 25)
+        slicesLabel.center = CGPoint(x: 325, y: 75)
         slicesLabel.textColor = UIColor.black
         slicesLabel.text = drawMandalaView?.getSlices()
         toolView.addSubview(slicesLabel)
         
         //Label lineWidth Slider ----------------------------
         let lineWidthSliderLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-        lineWidthSliderLabel.center = CGPoint(x: 25, y: 75)
+        lineWidthSliderLabel.center = CGPoint(x: 25, y: 125)
         lineWidthSliderLabel.textColor = UIColor.black
         lineWidthSliderLabel.text = "Line: "
         toolView.addSubview(lineWidthSliderLabel)
-        
+
         //lineWidth slider
-        let lineWidthSlider = UISlider(frame:CGRect(x: 50, y: 50, width: 250, height: 50))
+        let lineWidthSlider = UISlider(frame:CGRect(x: 50, y: 100, width: 250, height: 50))
         lineWidthSlider.minimumValue = 1
         lineWidthSlider.maximumValue = 15
         lineWidthSlider.value = 3.0
@@ -70,28 +98,14 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         
         //Label lineWidth Number
         lineWidthLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-        lineWidthLabel.center = CGPoint(x: 325, y: 75)
+        lineWidthLabel.center = CGPoint(x: 325, y: 125)
         lineWidthLabel.textColor = UIColor.black
         lineWidthLabel.text = drawMandalaView?.getLineWidth()
         toolView.addSubview(lineWidthLabel)
         
-        //Clear button
-        let clearBtn = UIButton(type: .system)
-        clearBtn.frame = CGRect(x: 50, y: 150, width:150, height:20)
-        clearBtn.setTitle("Clear", for: .normal)
-        clearBtn.addTarget(self, action: #selector(clearDraw), for: .touchUpInside)
-        toolView.addSubview(clearBtn)
-        
-        //Save button
-        let saveBtn = UIButton(type: .system)
-        saveBtn.frame = CGRect(x: 150, y: 150, width:150, height:20)
-        saveBtn.setTitle("Save", for: .normal)
-        saveBtn.addTarget(self, action: #selector(saveMandala), for: .touchUpInside)
-        toolView.addSubview(saveBtn)
-        
         self.view = view
     }
-    
+
     func slicesSliderValueDidChange(_ sender:UISlider!) {
         drawMandalaView?.changeSlicesTo(Int(sender.value))
         slicesLabel.text = drawMandalaView?.getSlices()
@@ -105,8 +119,16 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
     }
     
     @objc func clearDraw(){
-        drawMandalaView?.clear()
-        drawMandalaView?.setNeedsDisplay()
+        let alertClear = UIAlertController(title: "Clear Mandala", message: "Do you really want to clear your drawing?", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .default, handler:
+        { (action) -> Void in
+            self.drawMandalaView?.clear()
+            self.drawMandalaView?.setNeedsDisplay()
+        })
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        alertClear.addAction(okAction)
+        alertClear.addAction(cancelAction)
+        self.present(alertClear, animated: true, completion: nil)
     }
     @objc  func saveMandala() {
         let imageMandala = drawMandalaView?.getImage()
@@ -144,5 +166,4 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
 
 // Present the view controller in the Live View window
 PlaygroundPage.current.liveView = MyViewController()
-
 
