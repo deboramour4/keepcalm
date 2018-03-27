@@ -1,22 +1,7 @@
-/*:
- # The Mandala
- ## Mandalas are cool
- */
-
-//: And you can write only one line.
-
+//:![About me](about_me.png)
 
 //#-hidden-code
 import PlaygroundSupport
 
 let page = PlaygroundPage.current
 page.needsIndefiniteExecution = true
-
-//Senf messages to LiveView.swift
-func say(_ message: String) {
-    let page = PlaygroundPage.current
-    if let proxy = page.liveView as? PlaygroundRemoteLiveViewProxy {
-        proxy.send(.string(message))
-    }
-}
-
