@@ -1,6 +1,6 @@
 import UIKit
 
-class Line {
+public class Line {
     var start: CGPoint
     var end: CGPoint
     var color: UIColor

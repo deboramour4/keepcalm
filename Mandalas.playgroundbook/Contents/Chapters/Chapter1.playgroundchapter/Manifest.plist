@@ -5,14 +5,13 @@
 	<key>Version</key>
 	<string>1.0</string>
 	<key>Name</key>
-	<string>Second Page</string>
-	<key>LiveViewMode</key>
-	<string>VisibleByDefault</string>
-	<key>LiveViewEdgeToEdge</key>
-	<true/>
-	<key>PlaygroundLoggingMode</key>
-	<string>Off</string>
-	<key>PosterReference</key>
-	<string>dog.jpg</string>
+	<string>Chapter One</string>
+	<key>Pages</key>
+	<array>
+		<string>Page1.playgroundpage</string>
+		<string>Page2.playgroundpage</string>
+		<string>Page3.playgroundpage</string>
+		<string>Page4.playgroundpage</string>
+	</array>
 </dict>
 </plist>

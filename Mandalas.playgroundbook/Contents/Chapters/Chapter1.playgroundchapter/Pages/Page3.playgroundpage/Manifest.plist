@@ -2,15 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>PosterReference</key>
+	<string>placeholder.png</string>
 	<key>Version</key>
 	<string>1.0</string>
 	<key>Name</key>
-	<string>Sample Chapter</string>
-	<key>Pages</key>
-	<array>
-		<string>Page1.playgroundpage</string>
-		<string>Page2.playgroundpage</string>
-		<string>Page3.playgroundpage</string>
-	</array>
+	<string>Painting my Mandala</string>
 </dict>
 </plist>

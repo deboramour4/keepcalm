@@ -2,11 +2,13 @@ import UIKit
 
 public class DrawMandalaView: UIView {
     
-    var lines: [Line] = []
+    public var lines: [Line] = []
     var lastPoint: CGPoint!
     var drawColor = UIColor.black
-    var lineWidth = 3
-    var slices = 12
+    public var lineWidth = 3
+    public var slices = 12
+    public var image = UIImage()
+    
     
     func drawMandalaOutlines(){
         let viewWidth = Double(self.frame.width)
@@ -15,7 +17,10 @@ public class DrawMandalaView: UIView {
         let radius = viewWidth*0.8
         
         let context = UIGraphicsGetCurrentContext()
-        context?.setStrokeColor(UIColor.gray.cgColor)
+        
+        let color = UIColor(displayP3Red: 0.2, green: 0.2, blue: 0.2, alpha: 0.2)
+
+        context?.setStrokeColor(color.cgColor)
         context!.setLineWidth(0.5)
         for i in 0...slices {
             context!.beginPath()
@@ -35,6 +40,9 @@ public class DrawMandalaView: UIView {
     
     public func getSlices() -> String {
         return String(self.slices)
+    }
+    public func getLines() -> [Line] {
+        return self.lines
     }
     
     public func changeSlicesTo(_ n:Int) {
@@ -107,19 +115,19 @@ public class DrawMandalaView: UIView {
     }
     
     public override func draw(_ rect: CGRect) {
-        drawMandalaOutlines()
-        
         let context = UIGraphicsGetCurrentContext()
+        
+        drawMandalaOutlines()
         context?.setStrokeColor(UIColor.black.cgColor)
         context?.setLineCap(CGLineCap.round)
         
         for line in lines {
+            context!.setLineWidth(CGFloat(line.width))
             for i in 0...slices-1 {
                 if (i == 0) {
                     context!.beginPath()
                     context?.move(to: line.start)
                     context?.addLine(to: line.end)
-                    context!.setLineWidth(CGFloat(line.width))
                     context?.strokePath()
                     continue
                 }
@@ -135,4 +143,41 @@ public class DrawMandalaView: UIView {
         }
         
     }
+    
+    public func getImage() -> UIImage {
+        UIGraphicsBeginImageContext(self.frame.size);
+        
+        let context = UIGraphicsGetCurrentContext()
+        
+        let rect = CGRect(x:0, y:0, width: self.frame.size.width, height: self.frame.size.height)
+        context?.setFillColor(UIColor.white.cgColor)
+        context?.fill(rect)
+        
+        context?.setStrokeColor(UIColor.black.cgColor)
+        context?.setLineCap(CGLineCap.round)
+        
+        for line in lines {
+            context!.setLineWidth(CGFloat(line.width))
+            for i in 0...slices-1 {
+                if (i == 0) {
+                    context!.beginPath()
+                    context?.move(to: line.start)
+                    context?.addLine(to: line.end)
+                    context?.strokePath()
+                    continue
+                }
+                let rotation = (2*Double.pi)*(Double(i)/Double(slices))
+                let lineRotated = rotateLine(line, Float(rotation))
+                context!.beginPath()
+                context?.move(to: lineRotated.start)
+                context?.addLine(to: lineRotated.end)
+                context?.strokePath()
+            }
+        }
+        self.image = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext();
+        
+        return self.image
+    }
+    
 }

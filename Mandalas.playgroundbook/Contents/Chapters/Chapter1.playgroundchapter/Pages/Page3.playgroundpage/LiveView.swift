@@ -8,9 +8,14 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
     var lineWidthLabel = UILabel()
     var drawMandalaView : DrawMandalaView?
     var toolView = UIView()
-
+    var bgImg = UIImageView()
+    
     override func loadView() {
         let view = UIView()
+        // Background
+        bgImg.frame = CGRect(x: 0, y: 0, width: 1100, height: 900)
+        bgImg.image = UIImage(named: "bg_landscape.png")
+        view.addSubview(bgImg)
         
         //Draw Mandala Area
         drawMandalaView = DrawMandalaView(frame: CGRect(x: 50, y: 75, width: 400, height: 400))
@@ -28,14 +33,14 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         slicesSliderLabel.textColor = UIColor.black
         slicesSliderLabel.text = "Slices: "
         toolView.addSubview(slicesSliderLabel)
-
+        
         //Slice slider
         let slicesSlider = UISlider(frame:CGRect(x: 50, y: 0, width: 250, height: 50))
-        slicesSlider.minimumValue = 4
+        slicesSlider.minimumValue = 2
         slicesSlider.maximumValue = 20
         slicesSlider.value = 12.0
         slicesSlider.isContinuous = true
-        slicesSlider.tintColor = UIColor.green
+        slicesSlider.tintColor = UIColor.purple
         slicesSlider.addTarget(self, action: #selector(slicesSliderValueDidChange(_:)), for: .valueChanged)
         toolView.addSubview(slicesSlider)
         
@@ -52,14 +57,14 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         lineWidthSliderLabel.textColor = UIColor.black
         lineWidthSliderLabel.text = "Line: "
         toolView.addSubview(lineWidthSliderLabel)
-
+        
         //lineWidth slider
         let lineWidthSlider = UISlider(frame:CGRect(x: 50, y: 50, width: 250, height: 50))
         lineWidthSlider.minimumValue = 1
         lineWidthSlider.maximumValue = 15
         lineWidthSlider.value = 3.0
         lineWidthSlider.isContinuous = true
-        lineWidthSlider.tintColor = UIColor.green
+        lineWidthSlider.tintColor = UIColor.purple
         lineWidthSlider.addTarget(self, action: #selector(lineWidthSliderValueDidChange(_:)), for: .valueChanged)
         toolView.addSubview(lineWidthSlider)
         
@@ -72,14 +77,21 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         
         //Clear button
         let clearBtn = UIButton(type: .system)
-        clearBtn.frame = CGRect(x: 120, y: 150, width:150, height:20)
+        clearBtn.frame = CGRect(x: 50, y: 150, width:150, height:20)
         clearBtn.setTitle("Clear", for: .normal)
         clearBtn.addTarget(self, action: #selector(clearDraw), for: .touchUpInside)
         toolView.addSubview(clearBtn)
         
+        //Save button
+        let saveBtn = UIButton(type: .system)
+        saveBtn.frame = CGRect(x: 150, y: 150, width:150, height:20)
+        saveBtn.setTitle("Save", for: .normal)
+        saveBtn.addTarget(self, action: #selector(saveMandala), for: .touchUpInside)
+        toolView.addSubview(saveBtn)
+        
         self.view = view
     }
-
+    
     func slicesSliderValueDidChange(_ sender:UISlider!) {
         drawMandalaView?.changeSlicesTo(Int(sender.value))
         slicesLabel.text = drawMandalaView?.getSlices()
@@ -96,16 +108,17 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         drawMandalaView?.clear()
         drawMandalaView?.setNeedsDisplay()
     }
-
-//    @IBAction func changeStrokeColor(button: UIButton!){
-//        var color = UIColor!
-//        if (button.titleLabel.text == "Red"){
-//            color = UIColor.redColor()
-//        } else if (button.titleLabel.text == "Black") {
-//            color = UIColor.blackColor()
-//        }
-//        drawMandalaView.drawColor = color
-//    }
+    @objc  func saveMandala() {
+        let imageMandala = drawMandalaView?.getImage()
+        let imageData = UIImagePNGRepresentation(imageMandala!)
+        let compresedImage = UIImage(data: imageData!)
+        UIImageWriteToSavedPhotosAlbum(compresedImage!, nil, nil, nil)
+        
+        let alert = UIAlertController(title: "Saved", message: "Your Mandala has been saved in the Library", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+        alert.addAction(okAction)
+        self.present(alert, animated: true, completion: nil)
+    }
     
     public override func viewDidLayoutSubviews(){
         if self.view.frame.height < self.view.frame.width {
@@ -131,4 +144,5 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
 
 // Present the view controller in the Live View window
 PlaygroundPage.current.liveView = MyViewController()
+
 

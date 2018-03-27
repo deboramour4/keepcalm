@@ -5,11 +5,11 @@
 	<key>Version</key>
 	<string>1.0</string>
 	<key>Name</key>
-	<string>Intro</string>
+	<string>What are Mandalas for?</string>
 	<key>LiveViewMode</key>
 	<string>VisibleByDefault</string>
 	<key>PosterReference</key>
-	<string>dog.jpg</string>
+	<string>placeholder.png</string>
 	<key>LiveViewEdgeToEdge</key>
 	<string>YES</string>
 </dict>
