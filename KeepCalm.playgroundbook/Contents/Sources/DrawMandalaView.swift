@@ -3,10 +3,11 @@ import UIKit
 public class DrawMandalaView: UIView {
     
     public var lines: [Line] = []
-    var lastPoint: CGPoint!
-    var drawColor = UIColor.black
+    public var lastPoint: CGPoint!
+    public var drawColor = UIColor.black
     public var lineWidth = 3
     public var slices = 12
+    public var canDraw = true
     public var image = UIImage()
     
     
@@ -37,26 +38,24 @@ public class DrawMandalaView: UIView {
     public func clear() {
         self.lines = []
     }
-    
     public func getSlices() -> String {
         return String(self.slices)
     }
     public func getLines() -> [Line] {
         return self.lines
     }
-    
-    public func changeSlicesTo(_ n:Int) {
-        self.slices = n
-    }
-    
     public func getLineWidth() -> String {
         return String(self.lineWidth)
     }
-    
+    public func changeSlicesTo(_ n:Int) {
+        self.slices = n
+    }
     public func changeLineWidthTo(_ n:Int) {
         self.lineWidth = n
     }
-    
+    public func changeColorTo(_ color:UIColor) {
+        self.drawColor = color
+    }
     public func and(_ x:Bool,_ y:Bool) -> Bool {
         return x ? y : false;
     }
@@ -68,7 +67,6 @@ public class DrawMandalaView: UIView {
         } else if (1 >= temp) {
             return sqrt((c * c - (a - b) * (a - b)) / (a * b))
         } else {
-            print("No solution")
             return 0.0
         }
     }
@@ -104,21 +102,25 @@ public class DrawMandalaView: UIView {
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        lastPoint = touches.first?.location(in: self)
+        if (canPaint) {
+            lastPoint = touches.first?.location(in: self)
+        }
     }
     
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let newPoint = touches.first?.location(in: self)
-        lines.append(Line(start: lastPoint, end: newPoint!, color: drawColor, width:Float(lineWidth)))
-        lastPoint = newPoint
-        self.setNeedsDisplay()
+        if (canPaint) {
+            let newPoint = touches.first?.location(in: self)
+            lines.append(Line(start: lastPoint, end: newPoint!, color: drawColor, width:Float(lineWidth)))
+            lastPoint = newPoint
+            self.setNeedsDisplay()
+        }
     }
     
     public override func draw(_ rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
         
         drawMandalaOutlines()
-        context?.setStrokeColor(UIColor.black.cgColor)
+        context!.setStrokeColor(drawColor)
         context?.setLineCap(CGLineCap.round)
         
         for line in lines {
@@ -153,7 +155,7 @@ public class DrawMandalaView: UIView {
         context?.setFillColor(UIColor.white.cgColor)
         context?.fill(rect)
         
-        context?.setStrokeColor(UIColor.black.cgColor)
+        context?.setStrokeColor(drawColor)
         context?.setLineCap(CGLineCap.round)
         
         for line in lines {

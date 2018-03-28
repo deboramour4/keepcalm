@@ -3,9 +3,10 @@ import UIKit
 public class DrawView: UIView {
     
     public var lines: [Line] = []
-    var lastPoint: CGPoint!
-    var drawColor = UIColor.black
+    public var lastPoint: CGPoint!
+    public var drawColor = UIColor.black
     public var lineWidth = 3
+    public var canPaint = true
     public var image = UIImage()
     
     public func clear() {
@@ -15,27 +16,29 @@ public class DrawView: UIView {
     public func getLines() -> [Line] {
         return self.lines
     }
-    
     public func getLineWidth() -> String {
         return String(self.lineWidth)
     }
-    
     public func changeLineWidthTo(_ n:Int) {
         self.lineWidth = n
     }
-    public func changeColor(_ color:UIColor) {
+    public func changeColorTo(_ color:UIColor) {
         self.drawColor = color
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        lastPoint = touches.first?.location(in: self)
+        if (canPaint) {
+            lastPoint = touches.first?.location(in: self)
+        }
     }
     
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let newPoint = touches.first?.location(in: self)
-        lines.append(Line(start: lastPoint, end: newPoint!, color: drawColor, width:Float(lineWidth)))
-        lastPoint = newPoint
-        self.setNeedsDisplay()
+        if (canPaint) {
+            let newPoint = touches.first?.location(in: self)
+            lines.append(Line(start: lastPoint, end: newPoint!, color: drawColor, width:Float(lineWidth)))
+            lastPoint = newPoint
+            self.setNeedsDisplay()
+        }
     }
     
     public override func draw(_ rect: CGRect) {
@@ -59,11 +62,11 @@ public class DrawView: UIView {
         let rect = CGRect(x:0, y:0, width: self.frame.size.width, height: self.frame.size.height)
         context?.setFillColor(UIColor.white.cgColor)
         context?.fill(rect)
-    
+        
+        context?.setStrokeColor(drawColor)
         context?.setLineCap(CGLineCap.round)
         
         for line in lines {
-            context?.setStrokeColor(line.color.cgColor)
             context!.setLineWidth(CGFloat(line.width))
             context!.beginPath()
             context?.move(to: line.start)

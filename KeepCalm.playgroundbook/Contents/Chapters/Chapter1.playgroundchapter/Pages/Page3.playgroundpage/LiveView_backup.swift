@@ -7,9 +7,8 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
     var slicesLabel = UILabel()
     var lineWidthLabel = UILabel()
     var drawMandalaView : DrawMandalaView?
-    var paintMandalaView : DrawView?
     var toolView = UIView()
-    var toolDrawView = UIView()
+    var bgImg = UIImageView()
     
     let pen = UIButton(type: .custom)
     let paint = UIButton(type: .custom)
@@ -18,31 +17,21 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
 
     override func loadView() {
         let view = UIView()
-
         // Background
-        let bgImg.frame = CGRect(x: 0, y: 0, width: 1100, height: 900)
+        bgImg.frame = CGRect(x: 0, y: 0, width: 1100, height: 900)
         bgImg.image = UIImage(named: "bg_landscape.png")
         view.addSubview(bgImg)
 
-        //Paint Mandala
-        paintMandalaView = DrawView(frame: CGRect(x: 50, y: 75, width: 400, height: 400))
-        paintMandalaView?.backgroundColor = .white
-        paintMandalaView?.canPaint = false
-        paintMandalaView?.changeColorTo(UIColor(red:1.00, green:0.11, blue:0.11, alpha:1.0))
-        view.addSubview(paintMandalaView!)
-
         //Draw Mandala Area
         drawMandalaView = DrawMandalaView(frame: CGRect(x: 50, y: 75, width: 400, height: 400))
-        //drawMandalaView?.backgroundColor = .white
+        drawMandalaView?.backgroundColor = .white
         view.addSubview(drawMandalaView!)
         
         //Tools Area
-        toolView = UIView(frame: CGRect(x: 90, y: 500, width: 325, height: 250))
+        toolView = UIView(frame: CGRect(x: 90, y: 500, width: 325, height: 175))
+        //toolView.backgroundColor = .gray
         view.addSubview(toolView)
-
-        //Tools Draw -----------------------------------------
-        toolDrawView = UIView(frame: CGRect(x: 0, y: 50, width: 325, height: 150))
-        toolView.addSubview(toolDrawView)
+        
         
         //Button pencil
         pen.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
@@ -73,75 +62,54 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         save.addTarget(self, action: #selector(saveMandala), for: .touchUpInside)
         toolView.addSubview(save)
         
-        //Label Slice Slider
+        //Label Slice Slider ----------------------------
         let slicesSliderLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-        slicesSliderLabel.center = CGPoint(x: 25, y: 25)
+        slicesSliderLabel.center = CGPoint(x: 25, y: 75)
         slicesSliderLabel.textColor = UIColor.black
         slicesSliderLabel.text = "Slices: "
-        toolDrawView.addSubview(slicesSliderLabel)
+        toolView.addSubview(slicesSliderLabel)
 
         //Slice slider
-        let slicesSlider = UISlider(frame:CGRect(x: 50, y: 0, width: 250, height: 50))
+        let slicesSlider = UISlider(frame:CGRect(x: 50, y: 50, width: 250, height: 50))
         slicesSlider.minimumValue = 2
         slicesSlider.maximumValue = 20
         slicesSlider.value = 12.0
         slicesSlider.isContinuous = true
         slicesSlider.tintColor = UIColor.purple
         slicesSlider.addTarget(self, action: #selector(slicesSliderValueDidChange(_:)), for: .valueChanged)
-        toolDrawView.addSubview(slicesSlider)
+        toolView.addSubview(slicesSlider)
         
         //Label Slice Number
         slicesLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-        slicesLabel.center = CGPoint(x: 325, y: 25)
+        slicesLabel.center = CGPoint(x: 325, y: 75)
         slicesLabel.textColor = UIColor.black
         slicesLabel.text = drawMandalaView?.getSlices()
-        toolDrawView.addSubview(slicesLabel)
+        toolView.addSubview(slicesLabel)
         
-        //Label lineWidth Slider 
+        //Label lineWidth Slider ----------------------------
         let lineWidthSliderLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-        lineWidthSliderLabel.center = CGPoint(x: 25, y: 75)
+        lineWidthSliderLabel.center = CGPoint(x: 25, y: 125)
         lineWidthSliderLabel.textColor = UIColor.black
         lineWidthSliderLabel.text = "Line: "
-        toolDrawView.addSubview(lineWidthSliderLabel)
+        toolView.addSubview(lineWidthSliderLabel)
 
         //lineWidth slider
-        let lineWidthSlider = UISlider(frame:CGRect(x: 50, y: 50, width: 250, height: 50))
+        let lineWidthSlider = UISlider(frame:CGRect(x: 50, y: 100, width: 250, height: 50))
         lineWidthSlider.minimumValue = 1
         lineWidthSlider.maximumValue = 15
         lineWidthSlider.value = 3.0
         lineWidthSlider.isContinuous = true
         lineWidthSlider.tintColor = UIColor.purple
         lineWidthSlider.addTarget(self, action: #selector(lineWidthSliderValueDidChange(_:)), for: .valueChanged)
-        toolDrawView.addSubview(lineWidthSlider)
+        toolView.addSubview(lineWidthSlider)
         
         //Label lineWidth Number
         lineWidthLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-        lineWidthLabel.center = CGPoint(x: 325, y: 75)
+        lineWidthLabel.center = CGPoint(x: 325, y: 125)
         lineWidthLabel.textColor = UIColor.black
         lineWidthLabel.text = drawMandalaView?.getLineWidth()
-        toolDrawView.addSubview(lineWidthLabel)
-
-
-        //Tools Area Paint -----------------------------------------------
-        toolPaintView = UIView(frame: CGRect(x: 0, y: 50, width: 325, height: 150))
-        toolView.backgroundColor = .gray
-        toolView.addSubview(toolPaintView)
-        toolPaintView?.hidden = true
-
-        //Buttons colors
-        for i in 1...9 {
-            var colorButton = UIButton(type: .custom)
-            colorButton.frame = CGRect(x: 65*(i-1), y: ((i/5)*1.7)+100, width: 60, height: 60)
-            colorButton.setImage(UIImage(named: "color_button/color_\(i).png"), for: .normal)
-            colorButton.setImage(UIImage(named: "color_button/color_\(i)_selected.png"), for: .selected)
-            colorButton.tag = i
-            colorButton.addTarget(self, action: #selector(colorButtonAction(_:)), for: .touchUpInside)
-            toolPaintView.addSubview(colorButton)
-            if (i == 1) {
-                colorButton.isSelected = true
-            }
-        }
-
+        toolView.addSubview(lineWidthLabel)
+        
         self.view = view
     }
 
@@ -156,40 +124,12 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         lineWidthLabel.text = drawMandalaView?.getLineWidth()
         drawMandalaView?.setNeedsDisplay()
     }
-    @objc func colorButtonAction(_ button: UIButton){
-        switch (button.tag) {
-            case 1:
-                paintMandalaView?.changeColorTo(UIColor(red:1.00, green:0.11, blue:0.11, alpha:1.0))
-            case 2:
-                paintMandalaView?.changeColorTo(UIColor(red:1.00, green:0.37, blue:0.12, alpha:1.0))
-            case 3:
-                paintMandalaView?.changeColorTo(UIColor(red:0.93, green:0.86, blue:0.24, alpha:1.0))
-            case 4:
-                paintMandalaView?.changeColorTo(UIColor(red:0.15, green:0.80, blue:0.51, alpha:1.0))
-            case 5:
-                paintMandalaView?.changeColorTo(UIColor(red:0.22, green:0.65, blue:0.16, alpha:1.0))
-            case 6:
-                paintMandalaView?.changeColorTo(UIColor(red:0.12, green:0.48, blue:1.00, alpha:1.0))
-            case 7:
-                paintMandalaView?.changeColorTo(UIColor(red:0.57, green:0.16, blue:1.00, alpha:1.0))
-            case 8:
-                paintMandalaView?.changeColorTo(UIColor(red:1.00, green:0.34, blue:0.91, alpha:1.0))
-            case 9:
-                paintMandalaView?.changeColorTo(UIColor(red:0.00, green:0.00, blue:0.00, alpha:1.0))
-            case 10:
-                paintMandalaView?.changeColorTo(UIColor(red:1.00, green:1.00, blue:1.00, alpha:1.0))    
-       }
-    }
-
+    
     @objc func paintDraw(){
         clear.isSelected = false
         save.isSelected = false
         pen.isSelected = false
         paint.isSelected = true
-        paintMandalaView?.canPaint = true
-        drawMandalaView?.canDraw = false
-        toolDrawView?.hidden = true
-        toolPaintView?.hidden = false
     }
     
     @objc func penDraw(){
@@ -197,10 +137,6 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         save.isSelected = false
         pen.isSelected = true
         paint.isSelected = false
-        paintMandalaView?.canPaint = false
-        drawMandalaView?.canDraw = true
-        toolDrawView?.hidden = false
-        toolPaintView?.hidden = true
     }
     
     @objc func clearDraw(){
@@ -208,11 +144,6 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         save.isSelected = false
         pen.isSelected = false
         paint.isSelected = false
-        paintMandalaView?.canPaint = false
-        drawMandalaView?.canDraw = true
-        toolDrawView?.hidden = false
-        toolPaintView?.hidden = true
-
         let alertClear = UIAlertController(title: "Clear Mandala", message: "Do you really want to clear your drawing?", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ok", style: .default, handler:
         { (action) -> Void in
@@ -231,11 +162,6 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         save.isSelected = true
         pen.isSelected = false
         paint.isSelected = false
-        paintMandalaView?.canPaint = false
-        drawMandalaView?.canDraw = true
-        toolDrawView?.hidden = false
-        toolPaintView?.hidden = true
-
         let imageMandala = drawMandalaView?.getImage()
         let imageData = UIImagePNGRepresentation(imageMandala!)
         let compresedImage = UIImage(data: imageData!)
