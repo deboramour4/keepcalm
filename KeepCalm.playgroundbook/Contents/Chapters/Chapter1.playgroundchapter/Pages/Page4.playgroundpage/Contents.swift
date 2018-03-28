@@ -18,7 +18,7 @@
  [Comfortaa](https://fonts.google.com/specimen/Comfortaa)
  
  ### Template
- Swift Playground Book Template provided by Apple Inc.(https://developer.apple.com/library/content/samplecode/StarterPlaygroundBook/Introduction/Intro.html#//apple_ref/doc/uid/TP40017344-Intro-DontLinkElementID_2)
+ [Swift Playground Book Template provided by Apple Inc.](https://developer.apple.com/library/content/samplecode/StarterPlaygroundBook/Introduction/Intro.html#//apple_ref/doc/uid/TP40017344-Intro-DontLinkElementID_2)
  
  # References
  ------
