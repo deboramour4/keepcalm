@@ -36,10 +36,18 @@
   - HAVE FUN!
  ---
  
- "*Each person’s life is like a mandala – a vast, limitless circle. We stand in the center of our own circle, and everything we see, hear and think forms the mandala of our life.*" – Pema Chodron
-*/
+ # Final considerations
 
-//: [When you're done go to the next page](@next)
+ In this playground you have learned a little more about Mandalas which are a great way to relieve stress and graphically represent complex personalities. I really hope you have enjoyed this experience and seek to bring into your daily life some small activities that can improve your mental and physical health.
+
+ ---
+ 
+ "*Each person’s life is like a mandala – a vast, limitless circle. We stand in the center of our own circle, and everything we see, hear and think forms the mandala of our life.*" – Pema Chodron
+ 
+ ---
+
+ [When you're done go to the next page](@next)
+*/
 
 //#-hidden-code
 import PlaygroundSupport

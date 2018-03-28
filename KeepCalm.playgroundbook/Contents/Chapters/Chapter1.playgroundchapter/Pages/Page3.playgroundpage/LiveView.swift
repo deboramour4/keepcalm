@@ -154,13 +154,13 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         self.view = view
     }
 
-    func slicesSliderValueDidChange(_ sender:UISlider!) {
+    @objc func slicesSliderValueDidChange(_ sender:UISlider!) {
         drawMandalaView?.changeSlicesTo(Int(sender.value))
         slicesLabel.text = drawMandalaView?.getSlices()
         drawMandalaView?.setNeedsDisplay()
     }
     
-    func lineWidthSliderValueDidChange(_ sender:UISlider!) {
+    @objc func lineWidthSliderValueDidChange(_ sender:UISlider!) {
         drawMandalaView?.changeLineWidthTo(Int(sender.value))
         lineWidthLabel.text = drawMandalaView?.getLineWidth()
         drawMandalaView?.setNeedsDisplay()

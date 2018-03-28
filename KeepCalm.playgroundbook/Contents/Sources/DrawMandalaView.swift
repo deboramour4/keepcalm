@@ -95,7 +95,13 @@ public class DrawMandalaView: UIView {
         let testX = round(Float((viewWidth/2)+radius)*cos(-angleBetweenPosAndP1))
         let testY = round(Float((viewHeight/2)+radius)*sin(-angleBetweenPosAndP1))
         
-        let angleDirection = (testX == Float(point.x) && testY == Float(point.y)) ? -1 : 1
+        var angleDirection = 0
+        if(point.y >= viewHeight/2) {
+            angleDirection = (testX == Float(point.x) && testY == Float(point.y)) ? -1 : 1
+        } else {
+            angleDirection = (testX == Float(point.x) && testY == Float(point.y)) ? 1 : -1
+        }
+        
         let angle = rotation+(angleBetweenPosAndP1*Float(angleDirection))
         
         return CGPoint(x:(viewWidth/2)+radius*CGFloat(cos(angle)), y:(viewHeight/2)+radius*CGFloat(sin(angle)))

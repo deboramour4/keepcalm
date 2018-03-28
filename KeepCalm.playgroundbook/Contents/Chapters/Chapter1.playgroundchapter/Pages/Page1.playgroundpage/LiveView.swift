@@ -81,7 +81,7 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         self.view = view
     }
     
-    func lineWidthSliderValueDidChange(_ sender:UISlider!) {
+    @objc func lineWidthSliderValueDidChange(_ sender:UISlider!) {
         drawView?.changeLineWidthTo(Int(sender.value))
         lineWidthLabel.text = drawView?.getLineWidth()
         drawView?.setNeedsDisplay()
