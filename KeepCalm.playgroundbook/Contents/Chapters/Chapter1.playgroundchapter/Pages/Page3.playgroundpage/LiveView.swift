@@ -106,7 +106,7 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         let lineWidthSliderLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
         lineWidthSliderLabel.center = CGPoint(x: 25, y: 75)
         lineWidthSliderLabel.textColor = UIColor.black
-        lineWidthSliderLabel.text = "Line: "
+        lineWidthSliderLabel.text = "Width: "
         toolDrawView.addSubview(lineWidthSliderLabel)
 
         //lineWidth slider
