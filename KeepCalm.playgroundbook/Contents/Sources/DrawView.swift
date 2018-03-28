@@ -27,12 +27,14 @@ public class DrawView: UIView {
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with:event)
         if (canPaint) {
             lastPoint = touches.first?.location(in: self)
         }
     }
     
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesMoved(touches, with:event)
         if (canPaint) {
             let newPoint = touches.first?.location(in: self)
             lines.append(Line(start: lastPoint, end: newPoint!, color: drawColor, width:Float(lineWidth)))
@@ -63,11 +65,11 @@ public class DrawView: UIView {
         context?.setFillColor(UIColor.white.cgColor)
         context?.fill(rect)
         
-        context?.setStrokeColor(drawColor)
         context?.setLineCap(CGLineCap.round)
         
         for line in lines {
             context!.setLineWidth(CGFloat(line.width))
+            context?.setStrokeColor(line.color.cgColor)
             context!.beginPath()
             context?.move(to: line.start)
             context?.addLine(to: line.end)

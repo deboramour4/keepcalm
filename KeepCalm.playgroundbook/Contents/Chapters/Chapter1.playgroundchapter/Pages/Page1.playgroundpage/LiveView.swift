@@ -91,13 +91,13 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         clear.isSelected = false
         save.isSelected = false
         pen.isSelected = true
-        drawView?.changeColor(UIColor.black)
+        drawView?.changeColorTo(UIColor.black)
     }
     @objc func clearDraw(){
         clear.isSelected = true
         save.isSelected = false
         pen.isSelected = false
-        drawView?.changeColor(UIColor.white)
+        drawView?.changeColorTo(UIColor.white)
     }
     @objc  func saveDraw() {
         clear.isSelected = false

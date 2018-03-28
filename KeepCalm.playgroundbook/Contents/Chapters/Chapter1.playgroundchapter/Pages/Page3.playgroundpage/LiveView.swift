@@ -8,8 +8,11 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
     var lineWidthLabel = UILabel()
     var drawMandalaView : DrawMandalaView?
     var paintMandalaView : DrawView?
+    var bgImg = UIImageView()
     var toolView = UIView()
     var toolDrawView = UIView()
+    var toolPaintView = UIView()
+    var lastColorUsed = UIButton(type: .custom)
     
     let pen = UIButton(type: .custom)
     let paint = UIButton(type: .custom)
@@ -20,7 +23,7 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         let view = UIView()
 
         // Background
-        let bgImg.frame = CGRect(x: 0, y: 0, width: 1100, height: 900)
+        bgImg.frame = CGRect(x: 0, y: 0, width: 1100, height: 900)
         bgImg.image = UIImage(named: "bg_landscape.png")
         view.addSubview(bgImg)
 
@@ -29,11 +32,13 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         paintMandalaView?.backgroundColor = .white
         paintMandalaView?.canPaint = false
         paintMandalaView?.changeColorTo(UIColor(red:1.00, green:0.11, blue:0.11, alpha:1.0))
+        paintMandalaView?.lineWidth = 10
         view.addSubview(paintMandalaView!)
 
         //Draw Mandala Area
         drawMandalaView = DrawMandalaView(frame: CGRect(x: 50, y: 75, width: 400, height: 400))
-        //drawMandalaView?.backgroundColor = .white
+        drawMandalaView?.backgroundColor = .clear
+        drawMandalaView?.painted = true
         view.addSubview(drawMandalaView!)
         
         //Tools Area
@@ -124,14 +129,17 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
 
         //Tools Area Paint -----------------------------------------------
         toolPaintView = UIView(frame: CGRect(x: 0, y: 50, width: 325, height: 150))
-        toolView.backgroundColor = .gray
         toolView.addSubview(toolPaintView)
-        toolPaintView?.hidden = true
+        toolPaintView.isHidden = true
 
         //Buttons colors
-        for i in 1...9 {
-            var colorButton = UIButton(type: .custom)
-            colorButton.frame = CGRect(x: 65*(i-1), y: ((i/5)*1.7)+100, width: 60, height: 60)
+        for i in 1...10 {
+            let colorButton = UIButton(type: .custom)
+            if (i/6 == 0) {
+                colorButton.frame = CGRect(x: 65*(i-1), y: 10, width: 60, height: 60)
+            } else {
+                colorButton.frame = CGRect(x: 65*(i-6), y: 80, width: 60, height: 60)
+            }
             colorButton.setImage(UIImage(named: "color_button/color_\(i).png"), for: .normal)
             colorButton.setImage(UIImage(named: "color_button/color_\(i)_selected.png"), for: .selected)
             colorButton.tag = i
@@ -139,6 +147,7 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
             toolPaintView.addSubview(colorButton)
             if (i == 1) {
                 colorButton.isSelected = true
+                lastColorUsed = colorButton
             }
         }
 
@@ -159,25 +168,60 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
     @objc func colorButtonAction(_ button: UIButton){
         switch (button.tag) {
             case 1:
+                lastColorUsed.isSelected = false
+                button.isSelected = true
+                lastColorUsed = button
                 paintMandalaView?.changeColorTo(UIColor(red:1.00, green:0.11, blue:0.11, alpha:1.0))
             case 2:
+                lastColorUsed.isSelected = false
+                button.isSelected = true
+                lastColorUsed = button
                 paintMandalaView?.changeColorTo(UIColor(red:1.00, green:0.37, blue:0.12, alpha:1.0))
             case 3:
+                lastColorUsed.isSelected = false
+                button.isSelected = true
+                lastColorUsed = button
                 paintMandalaView?.changeColorTo(UIColor(red:0.93, green:0.86, blue:0.24, alpha:1.0))
             case 4:
+                lastColorUsed.isSelected = false
+                button.isSelected = true
+                lastColorUsed = button
                 paintMandalaView?.changeColorTo(UIColor(red:0.15, green:0.80, blue:0.51, alpha:1.0))
             case 5:
+                lastColorUsed.isSelected = false
+                button.isSelected = true
+                lastColorUsed = button
                 paintMandalaView?.changeColorTo(UIColor(red:0.22, green:0.65, blue:0.16, alpha:1.0))
             case 6:
+                lastColorUsed.isSelected = false
+                button.isSelected = true
+                lastColorUsed = button
                 paintMandalaView?.changeColorTo(UIColor(red:0.12, green:0.48, blue:1.00, alpha:1.0))
             case 7:
+                lastColorUsed.isSelected = false
+                button.isSelected = true
+                lastColorUsed = button
                 paintMandalaView?.changeColorTo(UIColor(red:0.57, green:0.16, blue:1.00, alpha:1.0))
             case 8:
+                lastColorUsed.isSelected = false
+                button.isSelected = true
+                lastColorUsed = button
                 paintMandalaView?.changeColorTo(UIColor(red:1.00, green:0.34, blue:0.91, alpha:1.0))
             case 9:
+                lastColorUsed.isSelected = false
+                button.isSelected = true
+                lastColorUsed = button
                 paintMandalaView?.changeColorTo(UIColor(red:0.00, green:0.00, blue:0.00, alpha:1.0))
             case 10:
-                paintMandalaView?.changeColorTo(UIColor(red:1.00, green:1.00, blue:1.00, alpha:1.0))    
+                lastColorUsed.isSelected = false
+                button.isSelected = true
+                lastColorUsed = button
+                paintMandalaView?.changeColorTo(UIColor(red:1.00, green:1.00, blue:1.00, alpha:1.0))
+            default:
+                lastColorUsed.isSelected = false
+                button.isSelected = true
+                lastColorUsed = button
+                paintMandalaView?.changeColorTo(UIColor(red:1.00, green:0.11, blue:0.11, alpha:1.0))
        }
     }
 
@@ -187,9 +231,10 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         pen.isSelected = false
         paint.isSelected = true
         paintMandalaView?.canPaint = true
+        drawMandalaView?.isUserInteractionEnabled = false
         drawMandalaView?.canDraw = false
-        toolDrawView?.hidden = true
-        toolPaintView?.hidden = false
+        toolDrawView.isHidden = true
+        toolPaintView.isHidden = false
     }
     
     @objc func penDraw(){
@@ -198,9 +243,10 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         pen.isSelected = true
         paint.isSelected = false
         paintMandalaView?.canPaint = false
+        drawMandalaView?.isUserInteractionEnabled = true
         drawMandalaView?.canDraw = true
-        toolDrawView?.hidden = false
-        toolPaintView?.hidden = true
+        toolDrawView.isHidden = false
+        toolPaintView.isHidden = true
     }
     
     @objc func clearDraw(){
@@ -209,15 +255,18 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         pen.isSelected = false
         paint.isSelected = false
         paintMandalaView?.canPaint = false
+        drawMandalaView?.isUserInteractionEnabled = true
         drawMandalaView?.canDraw = true
-        toolDrawView?.hidden = false
-        toolPaintView?.hidden = true
+        toolDrawView.isHidden = false
+        toolPaintView.isHidden = true
 
         let alertClear = UIAlertController(title: "Clear Mandala", message: "Do you really want to clear your drawing?", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ok", style: .default, handler:
         { (action) -> Void in
             self.drawMandalaView?.clear()
             self.drawMandalaView?.setNeedsDisplay()
+            self.paintMandalaView?.clear()
+            self.paintMandalaView?.setNeedsDisplay()
         })
         let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
         alertClear.addAction(okAction)
@@ -232,12 +281,24 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
         pen.isSelected = false
         paint.isSelected = false
         paintMandalaView?.canPaint = false
+        drawMandalaView?.isUserInteractionEnabled = true
         drawMandalaView?.canDraw = true
-        toolDrawView?.hidden = false
-        toolPaintView?.hidden = true
+        toolDrawView.isHidden = false
+        toolPaintView.isHidden = true
 
         let imageMandala = drawMandalaView?.getImage()
-        let imageData = UIImagePNGRepresentation(imageMandala!)
+        let imageMandalaPainted = paintMandalaView?.getImage()
+        var finalMandala = UIImage()
+        
+
+        UIGraphicsBeginImageContext(CGSize(width:400, height:400))
+        imageMandalaPainted?.draw(in: CGRect(x:0, y:0, width:400, height: 400))
+        imageMandala?.draw(in: CGRect(x:0, y:0, width:400, height: 400), blendMode: .normal, alpha: 0.8)
+        
+        finalMandala = UIGraphicsGetImageFromCurrentImageContext()!;
+        UIGraphicsEndImageContext();
+        
+        let imageData = UIImagePNGRepresentation(finalMandala)
         let compresedImage = UIImage(data: imageData!)
         UIImageWriteToSavedPhotosAlbum(compresedImage!, nil, nil, nil)
         
@@ -253,9 +314,11 @@ class MyViewController : UIViewController, PlaygroundLiveViewMessageHandler {
     public override func viewDidLayoutSubviews(){
         if self.view.frame.height < self.view.frame.width {
             drawMandalaView?.frame = CGRect(x: 20, y: 75, width: 400, height: 400)
+            paintMandalaView?.frame = CGRect(x: 20, y: 75, width: 400, height: 400)
             toolView.frame = CGRect( x:430, y:200, width:toolView.frame.size.width, height:toolView.frame.size.height )
         } else {
             drawMandalaView?.frame = CGRect(x: 50, y: 75, width: 400, height: 400)
+            paintMandalaView?.frame = CGRect(x: 50, y: 75, width: 400, height: 400)
             toolView.frame = CGRect( x:90, y:500, width:toolView.frame.size.width, height:toolView.frame.size.height )
         }
     }

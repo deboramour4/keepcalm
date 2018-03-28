@@ -9,6 +9,7 @@ public class DrawMandalaView: UIView {
     public var slices = 12
     public var canDraw = true
     public var image = UIImage()
+    public var painted = false
     
     
     func drawMandalaOutlines(){
@@ -102,13 +103,15 @@ public class DrawMandalaView: UIView {
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if (canPaint) {
+        super.touchesBegan(touches, with:event)
+        if (canDraw) {
             lastPoint = touches.first?.location(in: self)
         }
     }
     
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if (canPaint) {
+        super.touchesMoved(touches, with:event)
+        if (canDraw) {
             let newPoint = touches.first?.location(in: self)
             lines.append(Line(start: lastPoint, end: newPoint!, color: drawColor, width:Float(lineWidth)))
             lastPoint = newPoint
@@ -118,9 +121,9 @@ public class DrawMandalaView: UIView {
     
     public override func draw(_ rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
-        
+
         drawMandalaOutlines()
-        context!.setStrokeColor(drawColor)
+        context!.setStrokeColor(drawColor.cgColor)
         context?.setLineCap(CGLineCap.round)
         
         for line in lines {
@@ -151,11 +154,13 @@ public class DrawMandalaView: UIView {
         
         let context = UIGraphicsGetCurrentContext()
         
-        let rect = CGRect(x:0, y:0, width: self.frame.size.width, height: self.frame.size.height)
-        context?.setFillColor(UIColor.white.cgColor)
-        context?.fill(rect)
+        if(!painted){
+            let rect = CGRect(x:0, y:0, width: self.frame.size.width, height: self.frame.size.height)
+            context?.setFillColor(UIColor.white.cgColor)
+            context?.fill(rect)
+        }
         
-        context?.setStrokeColor(drawColor)
+        context?.setStrokeColor(drawColor.cgColor)
         context?.setLineCap(CGLineCap.round)
         
         for line in lines {
